@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System of Equations Calculator</title>
+    <link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" href="style-equations.css">
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <button id="menu-toggle" class="menu-toggle">☰</button>
+
+    <div class="container">
+        <aside class="sidebar">
+            <nav>
+                <ul>
+                    <li class="back-link"><a href="index.html">← Kembali ke Menu</a></li>
+                    <li><a href="matrix.html">Matrix calculator</a></li>
+                    <li class="active"><a href="#">System of equations calculator ✓</a></li>
+                    <li><a href="#">Determinant calculator</a></li>
+                    <li><a href="#">Eigenvalues calculator</a></li>
+                    <li><a href="#">Wikipedia Matrices ↗</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="calculator-main">
+            <h1 class="page-title">System of Equations Calculator</h1>
+            <p class="page-description">Masukkan koefisien dari sistem Anda ke dalam input. Biarkan kosong untuk variabel yang tidak ada dalam persamaan.</p>
+
+            <div class="equations-container">
+                <div class="system-body">
+                    <div class="matrix-parenthesis">{</div>
+                    <div id="equations-grid" class="equations-grid">
+                        <!-- Input akan digenerate oleh JavaScript -->
+                    </div>
+                </div>
+                <div class="equations-controls">
+                    <span>Persamaan</span>
+                    <button class="icon-btn" id="eq-minus">-</button>
+                    <button class="icon-btn" id="eq-plus">+</button>
+                    <button class="icon-btn" id="random-btn" title="Isi dengan angka acak">R</button>
+                </div>
+            </div>
+
+            <div class="solve-controls">
+                <span>Selesaikan dengan:</span>
+                <select id="solve-method">
+                    <option value="gaussian">Gaussian elimination</option>
+                    <option value="gauss-jordan" disabled>Gauss-Jordan elimination</option>
+                    <option value="cramer" disabled>Cramer's rule</option>
+                    <option value="inverse" disabled>Using the inverse matrix</option>
+                    <option value="montante" disabled>Montante's method</option>
+                    <option value="least-squares" disabled>Linear least squares method</option>
+                    <option value="compatibility" disabled>Test For Compatibility</option>
+                </select>
+                <button id="solve-btn" class="solve-button">Solve</button>
+                <button id="clear-btn" class="solve-button clear-button">Clear</button>
+            </div>
+
+            <div id="result-area">
+                <!-- Hasil akan ditampilkan di sini -->
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.4.1/math.min.js"></script>
+    <script src="script-equations.js"></script>
+</body>
+</html>

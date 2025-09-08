@@ -1,0 +1,111 @@
+/* Style tambahan khusus untuk halaman kalkulator sistem persamaan */
+
+.page-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.page-description {
+    text-align: center;
+    color: #bdc3c7;
+    margin-bottom: 30px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.equations-container {
+    background-color: #2c3e50;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.system-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.equations-grid {
+    display: grid;
+    gap: 10px 5px; /* Sedikit mengurangi gap horizontal */
+    align-items: center;
+}
+
+.equation-row {
+    display: contents;
+}
+
+.equation-cell {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.equation-cell input {
+    width: 45px; /* Sedikit perkecil input */
+    height: 40px;
+    background-color: #34495e;
+    border: 1px solid #4a6a8a;
+    border-radius: 4px;
+    color: #ecf0f1;
+    text-align: center;
+    font-size: 16px;
+}
+
+.equation-cell label, .equation-cell span {
+    color: #bdc3c7;
+    padding: 0 5px;
+}
+
+.equations-controls {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.solve-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+#solve-method {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    border: 1px solid #4a6a8a;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.solve-button {
+    background-color: #4a6a8a;
+    border: 1px solid #7f8c8d;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 8px 25px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.solve-button:hover {
+    background-color: #5b81a9;
+}
+
+.clear-button {
+    background-color: #566573;
+    margin-left: 5px; /* Tambahkan margin */
+}
+.clear-button:hover {
+    background-color: #7f8c8d;
+}

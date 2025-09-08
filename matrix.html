@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <button id="menu-toggle" class="menu-toggle">☰</button>
+
+    <div class="container">
+        <aside class="sidebar">
+            <nav>
+                <ul>
+                    <!-- Tombol Kembali Ditambahkan -->
+                    <li class="back-link"><a href="index.html">← Kembali ke Menu</a></li>
+                    <li class="active"><a href="#">Matrix calculator ✓</a></li>
+                    <li><a href="equations.html">System of equations calculator</a></li>
+                    <li><a href="#">Determinant calculator</a></li>
+                    <li><a href="#">Eigenvalues calculator</a></li>
+                    <li><a href="#">Wikipedia Matrices ↗</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="calculator-main">
+            <!-- Sisa konten sama persis seperti sebelumnya -->
+            <div class="matrix-interface">
+                <!-- Kolom Matriks A -->
+                <div class="matrix-container" id="matrix-a-container">
+                    <div class="matrix-header">
+                        <span>Matrix A:</span>
+                        <span id="matrix-a-dims" class="matrix-dims"></span>
+                    </div>
+                    <div class="matrix-body">
+                        <div class="matrix-parenthesis">(</div>
+                        <div class="matrix-grid" id="matrix-a-grid"></div>
+                        <div class="matrix-parenthesis">)</div>
+                    </div>
+                    <div class="matrix-controls">
+                        <span>Cells</span>
+                        <button class="icon-btn" title="Coming soon!">📷</button>
+                        <button class="icon-btn" id="dim-minus-a">-</button>
+                        <button class="icon-btn" id="dim-plus-a">+</button>
+                        <button class="icon-btn" id="random-btn-a" title="Isi dengan angka acak">R</button>
+                    </div>
+
+                    <div class="matrix-actions">
+                        <button id="determinant-btn-a" class="action-btn" title="Hitung nilai skalar dari matriks persegi.">Determinant</button>
+                        <button id="inverse-btn-a" class="action-btn" title="Temukan matriks balikan (invers). Matriks harus persegi dan determinan tidak boleh nol.">Inverse</button>
+                        <button id="transpose-btn-a" class="action-btn" title="Tukar posisi baris dengan kolom.">Transpose</button>
+                        <button id="rank-btn-a" class="action-btn" title="Hitung rank dari matriks.">Rank</button>
+                        <button id="scalar-multiply-btn-a" class="action-btn" title="Kalikan setiap elemen matriks dengan nilai skalar.">Multiply by</button>
+                        <button id="power-btn-a" class="action-btn" title="Pangkatkan matriks dengan suatu nilai.">To the power of</button>
+                        <button id="diagonal-btn-a" class="action-btn" title="Buat matriks diagonal dari matriks ini.">Diagonal matrix</button>
+                        
+                        <details class="advanced-group">
+                            <summary>Fungsi Lanjutan</summary>
+                            <div class="advanced-actions">
+                                <button id="ref-btn-a" class="action-btn" title="Ubah matriks menjadi bentuk eselon baris.">Row echelon form</button>
+                                <button id="lu-btn-a" class="action-btn" title="Lakukan dekomposisi LU pada matriks.">LU decomposition</button>
+                                <button id="cholesky-btn-a" class="action-btn" title="Lakukan dekomposisi Cholesky.">Cholesky decomposition</button>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+
+                <!-- Kolom Operasi Tengah -->
+                <div class="operations-container">
+                    <button id="swap-btn" class="op-btn" title="Tukar Matriks A dan B">↔</button>
+                    <button id="op-multiply" class="op-btn" title="Perkalian Matriks A dan B">A × B</button>
+                    <button id="op-add" class="op-btn" title="Penjumlahan Matriks A dan B">A + B</button>
+                    <button id="op-subtract" class="op-btn" title="Pengurangan Matriks A dan B">A − B</button>
+                </div>
+
+                <!-- Kolom Matriks B -->
+                <div class="matrix-container" id="matrix-b-container">
+                    <div class="matrix-header">
+                        <span>Matrix B:</span>
+                        <span id="matrix-b-dims" class="matrix-dims"></span>
+                    </div>
+                    <div class="matrix-body">
+                        <div class="matrix-parenthesis">(</div>
+                        <div class="matrix-grid" id="matrix-b-grid"></div>
+                        <div class="matrix-parenthesis">)</div>
+                    </div>
+                    <div class="matrix-controls">
+                        <span>Cells</span>
+                        <button class="icon-btn" title="Coming soon!">📷</button>
+                        <button class="icon-btn" id="dim-minus-b">-</button>
+                        <button class="icon-btn" id="dim-plus-b">+</button>
+                        <button class="icon-btn" id="random-btn-b" title="Isi dengan angka acak">R</button>
+                    </div>
+
+                     <div class="matrix-actions">
+                        <button id="determinant-btn-b" class="action-btn" title="Hitung nilai skalar dari matriks persegi.">Determinant</button>
+                        <button id="inverse-btn-b" class="action-btn" title="Temukan matriks balikan (invers). Matriks harus persegi dan determinan tidak boleh nol.">Inverse</button>
+                        <button id="transpose-btn-b" class="action-btn" title="Tukar posisi baris dengan kolom.">Transpose</button>
+                        <button id="rank-btn-b" class="action-btn" title="Hitung rank dari matriks.">Rank</button>
+                        <button id="scalar-multiply-btn-b" class="action-btn" title="Kalikan setiap elemen matriks dengan nilai skalar.">Multiply by</button>
+                        <button id="power-btn-b" class="action-btn" title="Pangkatkan matriks dengan suatu nilai.">To the power of</button>
+                        <button id="diagonal-btn-b" class="action-btn" title="Buat matriks diagonal dari matriks ini.">Diagonal matrix</button>
+
+                        <details class="advanced-group">
+                            <summary>Fungsi Lanjutan</summary>
+                            <div class="advanced-actions">
+                                <button id="ref-btn-b" class="action-btn" title="Ubah matriks menjadi bentuk eselon baris.">Row echelon form</button>
+                                <button id="lu-btn-b" class="action-btn" title="Lakukan dekomposisi LU pada matriks.">LU decomposition</button>
+                                <button id="cholesky-btn-b" class="action-btn" title="Lakukan dekomposisi Cholesky.">Cholesky decomposition</button>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </div>
+
+            <div class="global-controls">
+                <button class="clean-btn-center" id="clean-btn">Clear</button>
+            </div>
+
+            <div id="result-area"></div>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.4.1/math.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
