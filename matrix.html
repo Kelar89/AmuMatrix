@@ -5,28 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matrix Calculator</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <button id="menu-toggle" class="menu-toggle">☰</button>
 
     <div class="container">
-<aside class="sidebar">
-    <nav>
-        <ul>
-            <li class="back-link"><a href="index.html">← Kembali ke Menu</a></li>
-            <li class="active"><a href="matrix.html">Matrix calculator ✓</a></li>
-            <li><a href="equations.html">System of equations calculator</a></li>
-            <li><a href="#">Determinant calculator</a></li>
-            <li><a href="#">Eigenvalues calculator</a></li> <li><a href="#">Wikipedia Matrices ↗</a></li>
-        </ul>
-    </nav>
-</aside>
+        <aside class="sidebar">
+            <nav>
+                <ul>
+                    <li class="back-link"><a href="index.html">← Kembali ke Menu</a></li>
+                    <li class="active"><a href="matrix.html">Matrix calculator ✓</a></li>
+                    <li><a href="equations.html">System of equations calculator</a></li>
+                    <li><a href="#">Determinant calculator</a></li>
+                    <li><a href="eigenvalues.html">Eigenvalues calculator</a></li>
+                    <li><a href="#">Wikipedia Matrices ↗</a></li>
+                </ul>
+            </nav>
+        </aside>
 
         <main class="calculator-main">
-            <!-- Sisa konten sama persis seperti sebelumnya -->
             <div class="matrix-interface">
-                <!-- Kolom Matriks A -->
                 <div class="matrix-container" id="matrix-a-container">
                     <div class="matrix-header">
                         <span>Matrix A:</span>
@@ -65,7 +64,6 @@
                     </div>
                 </div>
 
-                <!-- Kolom Operasi Tengah -->
                 <div class="operations-container">
                     <button id="swap-btn" class="op-btn" title="Tukar Matriks A dan B">↔</button>
                     <button id="op-multiply" class="op-btn" title="Perkalian Matriks A dan B">A × B</button>
@@ -73,7 +71,6 @@
                     <button id="op-subtract" class="op-btn" title="Pengurangan Matriks A dan B">A − B</button>
                 </div>
 
-                <!-- Kolom Matriks B -->
                 <div class="matrix-container" id="matrix-b-container">
                     <div class="matrix-header">
                         <span>Matrix B:</span>
