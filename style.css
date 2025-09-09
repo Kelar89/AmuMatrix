@@ -2,7 +2,7 @@
 body {
     background-color: #34495e;
     color: #ecf0f1;
-    font-family: 'Poppins', sans-serif; /* DIUBAH ke Poppins */
+    font-family: 'Poppins', sans-serif;
     margin: 0;
     font-size: 14px;
 }
@@ -19,7 +19,7 @@ body {
     padding: 20px 10px;
     width: 220px;
     flex-shrink: 0;
-    transition: margin-left 0.4s ease-in-out; /* DIUBAH: Animasi lebih halus */
+    transition: margin-left 0.4s ease-in-out;
 }
 
 .sidebar nav ul { list-style: none; padding: 0; margin: 0; }
@@ -44,7 +44,7 @@ body {
 .calculator-main { 
     flex-grow: 1; 
     padding: 20px; 
-    transition: margin-left 0.4s ease-in-out; /* DIUBAH: Animasi lebih halus */
+    transition: margin-left 0.4s ease-in-out;
 }
 .matrix-interface { display: flex; justify-content: center; align-items: flex-start; gap: 20px; }
 .matrix-container { background-color: #2c3e50; padding: 15px; border-radius: 6px; width: 380px; }
@@ -84,18 +84,70 @@ body {
 .menu-toggle { display: none; position: fixed; top: 15px; left: 15px; z-index: 1000; background-color: #2c3e50; color: #ecf0f1; border: 1px solid #7f8c8d; font-size: 24px; width: 40px; height: 40px; border-radius: 5px; cursor: pointer; }
 .edu-link { display: block; margin-top: 20px; padding-top: 15px; border-top: 1px solid #4a6a8a; text-align: center; color: #bdc3c7; text-decoration: none; transition: color 0.3s ease; }
 .edu-link:hover { color: #3498db; }
-@media (max-width: 1200px) { .matrix-container { width: 320px; } .matrix-cell { width: 40px; height: 40px; } .matrix-grid { gap: 4px; } }
+.cramer-step { margin-top: 20px; padding-top: 15px; border-top: 1px solid #4a6a8a; }
+
+
+/* ======================================= */
+/* === BAGIAN RESPONSIVE DIPERBARUI TOTAL === */
+/* ======================================= */
+
+@media (max-width: 1200px) {
+    .matrix-container { width: 320px; }
+    .matrix-cell { width: 40px; height: 40px; }
+    .matrix-grid { gap: 4px; }
+}
+
 @media (max-width: 768px) {
     .menu-toggle { display: block; }
-    .container { flex-direction: column; overflow-x: hidden; } /* Cegah scroll horizontal aneh */
-    .sidebar { position: fixed; margin-left: -240px; /* DIUBAH: Sembunyi pakai margin */ top: 0; height: 100%; z-index: 999; }
-    .sidebar.open { margin-left: 0; /* DIUBAH: Tampilkan dengan margin */ }
+    .container { flex-direction: column; overflow-x: hidden; }
+    .sidebar { position: fixed; margin-left: -240px; top: 0; height: 100%; z-index: 999; }
+    .sidebar.open { margin-left: 0; }
     .calculator-main { padding-top: 60px; margin-left: 0 !important; }
-    .matrix-interface { flex-direction: column; align-items: center; width: 100%; }
-    .matrix-container { width: 100%; max-width: 400px; margin-bottom: 20px; }
-    .operations-container { flex-direction: row; justify-content: center; padding-top: 0; width: 100%; }
-    .matrix-cell { width: 50px; height: 50px; /* DIUBAH: Perbesar input mobile */ font-size: 16px; }
-    .matrix-grid { gap: 4px; }
-    .matrix-parenthesis { font-size: 80px; }
-    .result-step { justify-content: center; }
+
+    /* Tata letak utama menjadi vertikal */
+    .matrix-interface {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        gap: 15px;
+    }
+
+    .matrix-container {
+        width: 100%;
+        max-width: 400px;
+        margin-bottom: 0;
+    }
+
+    /* Tombol operasi menjadi horizontal */
+    .operations-container {
+        flex-direction: row;
+        justify-content: center;
+        padding-top: 0;
+        width: 100%;
+        gap: 15px;
+    }
+
+    /* Sesuaikan ukuran elemen di dalam matriks */
+    .matrix-cell {
+        width: 45px;
+        height: 45px;
+        font-size: 16px;
+    }
+
+    .matrix-grid {
+        gap: 4px;
+    }
+
+    .matrix-parenthesis {
+        font-size: 70px;
+    }
+
+    /* Tombol aksi menjadi satu kolom agar tidak sempit */
+    .matrix-actions {
+        grid-template-columns: 1fr;
+    }
+    
+    .result-step {
+        justify-content: center;
+    }
 }
