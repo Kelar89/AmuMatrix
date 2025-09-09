@@ -86,11 +86,6 @@ body {
 .edu-link:hover { color: #3498db; }
 .cramer-step { margin-top: 20px; padding-top: 15px; border-top: 1px solid #4a6a8a; }
 
-
-/* ======================================= */
-/* === BAGIAN RESPONSIVE DIPERBARUI TOTAL === */
-/* ======================================= */
-
 @media (max-width: 1200px) {
     .matrix-container { width: 320px; }
     .matrix-cell { width: 40px; height: 40px; }
@@ -124,7 +119,6 @@ body {
         justify-content: center;
         padding-top: 0;
         width: 100%;
-        gap: 15px;
     }
 
     /* Sesuaikan ukuran elemen di dalam matriks */
