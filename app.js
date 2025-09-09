@@ -1,53 +1,30 @@
-// App interactions: preloader, mobile menu, typing effect, cards hover → boost geo, SW register
-(() => {
-  // Preloader
+// Register Service Worker for PWA
+if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    const pre = document.getElementById("preloader");
-    // kasih waktu animasi dikit biar smooth
-    setTimeout(() => pre.classList.add("hide"), 400);
+    navigator.serviceWorker
+      .register("service-worker.js")
+      .then(reg => console.log("Service Worker registered:", reg))
+      .catch(err => console.log("SW registration failed:", err));
   });
+}
 
-  // Mobile burger
-  const burger = document.querySelector(".hamburger");
-  const menu = document.getElementById("nav-menu");
-  if (burger && menu) {
-    burger.addEventListener("click", () => {
-      const open = menu.classList.toggle("open");
-      burger.classList.toggle("active", open);
-      burger.setAttribute("aria-expanded", String(open));
-    });
-  }
+// Hamburger Menu
+const hamburger = document.querySelector(".hamburger");
+const navMenu = document.getElementById("nav-menu");
 
-  // Typing effect (judul) sederhana
-  const title = document.querySelector(".hero-title");
-  if (title && title.dataset.type) {
-    const full = title.dataset.type.trim();
-    title.textContent = "";
-    let i = 0;
-    const tick = () => {
-      title.textContent = full.slice(0, i++);
-      if (i <= full.length) requestAnimationFrame(tick);
-    };
-    // delay kecil setelah hero pop
-    setTimeout(tick, 250);
-  }
-
-  // Micro-interaction: kartu hover → garis geometri boost & follow cursor glow
-  const cards = document.querySelectorAll(".tool-card");
-  cards.forEach((card) => {
-    card.addEventListener("mouseenter", () => window.geoField?.boost(true));
-    card.addEventListener("mouseleave", () => window.geoField?.boost(false));
-    card.addEventListener("mousemove", (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-      card.style.setProperty("--mx", `${x}%`);
-      card.style.setProperty("--my", `${y}%`);
-    });
+if (hamburger) {
+  hamburger.addEventListener("click", () => {
+    hamburger.classList.toggle("active");
+    navMenu.classList.toggle("active");
   });
+}
 
-  // Register Service Worker (PWA)
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("service-worker.js").catch(() => {});
+// Preloader
+window.addEventListener("load", () => {
+  const preloader = document.getElementById("preloader");
+  if (preloader) {
+    setTimeout(() => {
+      preloader.classList.add("hide");
+    }, 800);
   }
-})();
+});

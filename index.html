@@ -1,27 +1,18 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <!-- Base -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AMU MATRIX | Kalkulator Aljabar Linear Modern</title>
-  <meta name="description" content="AMU MATRIX adalah kalkulator aljabar linear modern untuk menghitung matriks, sistem persamaan, dan langkah-langkah perhitungan secara transparan." />
-  <meta name="keywords" content="AMU MATRIX, kalkulator matriks, aljabar linear, determinan, invers, eliminasi Gauss, Cramer" />
-  <meta name="author" content="AMU MATRIX" />
-  <meta name="theme-color" content="#0af0cc" />
+  <meta name="description" content="AMU MATRIX adalah kalkulator aljabar linear modern untuk matriks & sistem persamaan, dengan langkah transparan dan UI futuristik." />
+  <meta name="theme-color" content="#00ffcc" />
 
-  <!-- Open Graph / Social -->
+  <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="AMU MATRIX | Kalkulator Aljabar Linear Modern" />
-  <meta property="og:description" content="Hitung matriks & sistem persamaan dengan tampilan futuristik dan langkah-langkah transparan." />
-  <meta property="og:image" content="og-image.png" />
-  <meta property="og:url" content="https://example.com/" />
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="AMU MATRIX | Kalkulator Aljabar Linear Modern" />
-  <meta name="twitter:description" content="Hitung matriks & sistem persamaan dengan tampilan futuristik dan langkah-langkah transparan." />
-  <meta name="twitter:image" content="og-image.png" />
+  <meta property="og:description" content="Hitung matriks & sistem persamaan dengan UI futuristik dan langkah transparan." />
+  <meta property="og:url" content="https://kelar89.github.io/AmuMatrix/" />
+  <meta property="og:image" content="icons/icon-512.png" />
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.webmanifest" />
@@ -39,15 +30,15 @@
     <div class="preloader-logo glitch" data-text="AMU MATRIX">AMU MATRIX</div>
   </div>
 
-  <!-- Background Geometri -->
+  <!-- Background Canvas -->
   <canvas id="geo-canvas" aria-hidden="true"></canvas>
 
   <!-- Navigation -->
-  <nav class="navbar" aria-label="Navigasi utama">
+  <nav class="navbar">
     <div class="nav-left">
       <a href="index.html" class="nav-logo">AMU MATRIX</a>
     </div>
-    <button class="hamburger" aria-label="Buka menu" aria-expanded="false" aria-controls="nav-menu">
+    <button class="hamburger" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
     <ul id="nav-menu" class="nav-links">
@@ -59,10 +50,10 @@
   </nav>
 
   <!-- Hero -->
-  <header class="hero" role="banner">
+  <header class="hero">
     <div class="hero-inner">
-      <h1 class="logo-text gradient-shift hero-appear">AMU MATRIX</h1>
-      <h2 class="animated-gradient-text hero-title" data-type="Kalkulator Aljabar Linear Modern">Kalkulator Aljabar Linear Modern</h2>
+      <h1 class="logo-text gradient-shift">AMU MATRIX</h1>
+      <h2 class="hero-title">Kalkulator Aljabar Linear Modern</h2>
       <p class="hero-desc">Pilih alat bantu di bawah ini. Visual futuristik, langkah transparan, hasil akurat.</p>
       <div class="hero-cta">
         <a href="matrix.html" class="btn primary glow">Mulai Kalkulator Matriks</a>
@@ -71,120 +62,28 @@
     </div>
   </header>
 
-  <!-- Tools Cards -->
-  <section class="tools" aria-labelledby="tools-title">
-    <h3 id="tools-title" class="section-title">Alat Pilihan</h3>
+  <!-- Tools -->
+  <section class="tools">
+    <h3 class="section-title">Alat Pilihan</h3>
     <div class="card-container">
-      <article class="tool-card" tabindex="0">
-        <div class="card-icon">
-          <!-- Ikon Matrix (SVG) -->
-          <svg class="matrix-icon" xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect x="3" y="3" width="7" height="7"></rect>
-            <rect x="14" y="3" width="7" height="7"></rect>
-            <rect x="3" y="14" width="7" height="7"></rect>
-            <rect x="14" y="14" width="7" height="7"></rect>
-          </svg>
-        </div>
+      <article class="tool-card">
+        <div class="card-icon">🧮</div>
         <h4>Kalkulator Matriks</h4>
-        <p>Lakukan invers, determinan, rank, dekomposisi, dan operasi lainnya dengan penjelasan langkah demi langkah.</p>
-        <a href="matrix.html" class="card-button glow">Mulai Menggunakan</a>
+        <p>Operasi matriks lengkap dengan langkah-langkah.</p>
+        <a href="matrix.html" class="card-button glow">Mulai</a>
       </article>
-
-      <article class="tool-card" tabindex="0">
-        <div class="card-icon">
-          <!-- Ikon Persamaan (SVG) -->
-          <svg class="matrix-icon" xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
-            <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>
-            <line x1="9" y1="12" x2="15" y2="12"></line>
-            <line x1="9" y1="16" x2="15" y2="16"></line>
-            <line x1="11" y1="8" x2="13" y2="8"></line>
-          </svg>
-        </div>
+      <article class="tool-card">
+        <div class="card-icon">📘</div>
         <h4>System of Equations</h4>
-        <p>Selesaikan SPL dengan eliminasi Gaussian, aturan Cramer, atau invers matriks—cepat dan akurat.</p>
-        <a href="equations.html" class="card-button glow">Mulai Menggunakan</a>
+        <p>Selesaikan SPL dengan Gaussian, Cramer, atau Invers.</p>
+        <a href="equations.html" class="card-button glow">Mulai</a>
       </article>
-    </div>
-  </section>
-
-  <!-- How it works -->
-  <section class="how" aria-labelledby="how-title">
-    <h3 id="how-title" class="section-title">Cara Menggunakan</h3>
-    <div class="how-grid">
-      <div class="how-step">
-        <div class="step-num">1</div>
-        <h4>Pilih Kalkulator</h4>
-        <p>Pilih Matriks atau SPL sesuai kebutuhanmu.</p>
-      </div>
-      <div class="how-step">
-        <div class="step-num">2</div>
-        <h4>Input Data</h4>
-        <p>Masukkan matriks atau koefisien & konstanta.</p>
-      </div>
-      <div class="how-step">
-        <div class="step-num">3</div>
-        <h4>Dapatkan Solusi</h4>
-        <p>Lihat hasil lengkap dengan langkah-langkahnya.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Why AMU MATRIX -->
-  <section class="why" aria-labelledby="why-title">
-    <h3 id="why-title" class="section-title">Mengapa AMU MATRIX?</h3>
-    <div class="why-grid">
-      <div class="why-item">
-        <div class="why-emoji">🚀</div>
-        <h4>Cepat</h4>
-        <p>Hitung dalam sekejap dengan performa ringan dan optimasi cerdas.</p>
-      </div>
-      <div class="why-item">
-        <div class="why-emoji">🎓</div>
-        <h4>Edukasi</h4>
-        <p>Langkah-langkah perhitungan disajikan agar mudah dipelajari.</p>
-      </div>
-      <div class="why-item">
-        <div class="why-emoji">🔬</div>
-        <h4>Transparan</h4>
-        <p>Setiap hasil dilengkapi penjelasan; tidak hanya angka final.</p>
-      </div>
-      <div class="why-item">
-        <div class="why-emoji">📱</div>
-        <h4>Responsif</h4>
-        <p>Nyaman dipakai di HP, tablet, atau desktop dengan UI adaptif.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Bottom CTA -->
-  <section class="cta-bottom" aria-label="Ajakan lanjut menggunakan">
-    <h3>Siap Mencoba?</h3>
-    <p>Mulai dari kalkulator matriks atau sistem persamaan—gratis & cepat.</p>
-    <div class="cta-actions">
-      <a href="matrix.html" class="btn primary glow">Coba Sekarang</a>
-      <a href="equations.html" class="btn outline">Sistem Persamaan</a>
     </div>
   </section>
 
   <!-- Footer -->
   <footer class="footer" id="about">
     <div class="footer-content">
-      <div class="footer-col">
-        <h3>AMU MATRIX</h3>
-        <p>Kalkulator Aljabar Linear modern untuk mahasiswa, dosen, dan praktisi.</p>
-      </div>
-      <div class="footer-col">
-        <h4>Ikuti Kami</h4>
-        <div class="social-links">
-          <a href="#" aria-label="Website">🌐</a>
-          <a href="#" aria-label="Twitter/X">🐦</a>
-          <a href="#" aria-label="Facebook">📘</a>
-          <a href="#" aria-label="Instagram">📸</a>
-        </div>
-      </div>
-    </div>
-    <div class="footer-bottom">
       <p>© 2025 AMU MATRIX. All Rights Reserved.</p>
     </div>
   </footer>
