@@ -15,28 +15,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const solveMethodSelect = document.getElementById('solve-method');
 
     // --- Helper Functions ---
-    function createMatrixDisplay(matrixData, cellClass = 'result-cell') {
+    
+    function createMatrixDisplay(matrixData, { cellClass = 'result-cell', augmentCol = -1 } = {}) {
         const fragment = document.createDocumentFragment();
         const rows = matrixData.length;
         const cols = matrixData[0] ? matrixData[0].length : 0;
         const leftParen = document.createElement('div');
         leftParen.className = 'matrix-parenthesis';
         leftParen.textContent = '[';
-        const grid = document.createElement('div');
-        grid.className = 'result-grid';
-        grid.style.gridTemplateColumns = `repeat(${cols}, auto)`;
+        const gridElement = document.createElement('div');
+        gridElement.className = 'result-grid';
+        gridElement.style.gridTemplateColumns = `repeat(${cols}, auto)`;
         matrixData.forEach(rowData => {
-            rowData.forEach(cellData => {
+            rowData.forEach((cellData, colIndex) => {
                 const cell = document.createElement('div');
                 cell.className = `result-cell ${cellClass}`;
+                if (colIndex === augmentCol) {
+                    cell.style.borderLeft = '2px solid #7f8c8d';
+                    cell.style.paddingLeft = '10px';
+                }
                 cell.textContent = Number(cellData.toFixed(4));
-                grid.appendChild(cell);
+                gridElement.appendChild(cell);
             });
         });
         const rightParen = document.createElement('div');
         rightParen.className = 'matrix-parenthesis';
         rightParen.textContent = ']';
-        fragment.append(leftParen, grid, rightParen);
+        fragment.append(leftParen, gridElement, rightParen);
         return fragment;
     }
 
@@ -53,14 +58,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cols === 0) return [[]];
         let lead = 0;
         for (let r = 0; r < rows; r++) {
-            if (lead >= cols) { return mat; }
+            if (lead >= cols) return mat;
             let i = r;
             while (mat[i][lead] === 0) {
                 i++;
                 if (i === rows) {
                     i = r;
                     lead++;
-                    if (cols === lead) { return mat; }
+                    if (cols === lead) return mat;
                 }
             }
             [mat[i], mat[r]] = [mat[r], mat[i]];
@@ -85,16 +90,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderSystem() {
         grid.innerHTML = '';
         const varCount = equationCount;
-        
-        // Atur grid CSS: (varCount untuk input) + (varCount - 1 untuk '+') + (1 untuk '=') + (1 untuk konstanta)
-        const totalColumns = varCount * 2 + 1;
-        grid.style.gridTemplateColumns = `repeat(${totalColumns}, auto)`;
 
         for (let i = 0; i < equationCount; i++) {
             const row = document.createElement('div');
             row.className = 'equation-row';
-            row.style.gridColumn = `1 / ${totalColumns + 1}`; // Setiap baris mencakup semua kolom
-            row.style.display = 'contents'; // Agar elemen di dalamnya menjadi bagian dari grid utama
 
             // Input koefisien x1, x2, ...
             for (let j = 0; j < varCount; j++) {
@@ -112,24 +111,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 label.innerHTML = `x<sub>${j + 1}</sub>`;
                 cell.appendChild(label);
                 
-                grid.appendChild(cell);
+                row.appendChild(cell);
 
-                // Tambahkan '+' jika bukan variabel terakhir
                 if (j < varCount - 1) {
                     const plusSign = document.createElement('span');
-                    plusSign.className = 'equation-cell';
                     plusSign.textContent = '+';
-                    grid.appendChild(plusSign);
+                    row.appendChild(plusSign);
                 }
             }
 
-            // Elemen sama dengan (=)
             const equalsSign = document.createElement('span');
-            equalsSign.className = 'equation-cell';
             equalsSign.textContent = '=';
-            grid.appendChild(equalsSign);
+            row.appendChild(equalsSign);
             
-            // Input konstanta (setelah =)
             const constCell = document.createElement('div');
             constCell.className = 'equation-cell';
             const constInput = document.createElement('input');
@@ -137,7 +131,9 @@ document.addEventListener('DOMContentLoaded', () => {
             constInput.className = 'const-input';
             constInput.dataset.row = i;
             constCell.appendChild(constInput);
-            grid.appendChild(constCell);
+            row.appendChild(constCell);
+            
+            grid.appendChild(row);
         }
     }
 
@@ -185,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const title = document.createElement('h3');
         title.className = 'result-title';
-        title.textContent = `Solution by ${method.replace(/-/g, ' ')}`;
+        title.textContent = `Solution by ${solveMethodSelect.options[solveMethodSelect.selectedIndex].text}`;
         resultBlock.appendChild(title);
 
         const augmentedMatrix = coefficients.map((row, i) => [...row, constants[i]]);
@@ -198,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const refMatrix = calculateREF(augmentedMatrix);
         const step1MatrixDiv = document.createElement('div');
         step1MatrixDiv.className = 'result-step';
-        step1MatrixDiv.appendChild(createMatrixDisplay(refMatrix));
+        step1MatrixDiv.appendChild(createMatrixDisplay(refMatrix, { augmentCol: coefficients.length }));
         resultBlock.appendChild(step1MatrixDiv);
 
         const step2Text = document.createElement('p');
@@ -247,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const { coefficients, constants } = getSystemData();
         const method = solveMethodSelect.value;
         const { solution, error } = solveSystem(coefficients, constants, method);
-        displaySolution({ coefficients, constants, solution, error, method: "Gaussian Elimination" });
+        displaySolution({ coefficients, constants, solution, error, method });
     });
 
     if (menuToggle && sidebar) {

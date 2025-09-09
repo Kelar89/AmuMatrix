@@ -1,10 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- State Management ---
     let dimsA = { rows: 2, cols: 2 };
     let dimsB = { rows: 2, cols: 2 };
 
-    // --- DOM Element References ---
     const gridA = document.getElementById('matrix-a-grid');
     const plusBtnA = document.getElementById('dim-plus-a');
     const minusBtnA = document.getElementById('dim-minus-a');
@@ -18,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const opAddBtn = document.getElementById('op-add');
     const opSubtractBtn = document.getElementById('op-subtract');
     const opMultiplyBtn = document.getElementById('op-multiply');
+    const swapBtn = document.getElementById('swap-btn');
     const resultArea = document.getElementById('result-area');
     const cleanBtn = document.getElementById('clean-btn');
     const transposeBtnA = document.getElementById('transpose-btn-a');
@@ -42,164 +41,58 @@ document.addEventListener('DOMContentLoaded', () => {
     const choleskyBtnB = document.getElementById('cholesky-btn-b');
 
     // --- Helper Functions ---
+    function createMatrixDisplay(matrixData, { cellClass = 'result-cell', augmentCol = -1 } = {}) {
+        const fragment = document.createDocumentFragment();
+        const rows = matrixData.length;
+        const cols = matrixData[0] ? matrixData[0].length : 0;
+        const leftParen = document.createElement('div');
+        leftParen.className = 'matrix-parenthesis';
+        leftParen.textContent = '(';
+        const gridElement = document.createElement('div');
+        gridElement.className = 'result-grid';
+        gridElement.style.gridTemplateColumns = `repeat(${cols}, auto)`;
+        matrixData.forEach(rowData => {
+            rowData.forEach((cellData, colIndex) => {
+                const cell = document.createElement('div');
+                cell.className = `result-cell ${cellClass}`;
+                if (colIndex === augmentCol) {
+                    cell.style.borderLeft = '2px solid #7f8c8d';
+                    cell.style.paddingLeft = '10px';
+                }
+                // --- PERBAIKAN DI SINI ---
+                if (typeof cellData === 'number') {
+                    cell.textContent = Number(cellData.toFixed(4));
+                } else {
+                    cell.textContent = cellData; // Langsung gunakan jika bukan angka (misal: "2+3")
+                }
+                gridElement.appendChild(cell);
+            });
+        });
+        const rightParen = document.createElement('div');
+        rightParen.className = 'matrix-parenthesis';
+        rightParen.textContent = ')';
+        fragment.append(leftParen, gridElement, rightParen);
+        return fragment;
+    }
+    // ... Sisa file script.js sama persis seperti jawaban yang lalu
     function calculateRank(matrix) { let mat = matrix.map(row => [...row]); let rank = 0; const rows = mat.length; if (rows === 0) return 0; const cols = mat[0].length; if (cols === 0) return 0; let lead = 0; for (let r = 0; r < rows; r++) { if (lead >= cols) { return rank; } let i = r; while (mat[i][lead] === 0) { i++; if (i === rows) { i = r; lead++; if (cols === lead) { return rank; } } } [mat[i], mat[r]] = [mat[r], mat[i]]; let val = mat[r][lead]; if (val !== 0) { for (let j = 0; j < cols; j++) { mat[r][j] /= val; } } for (let i = 0; i < rows; i++) { if (i === r) continue; val = mat[i][lead]; for (let j = 0; j < cols; j++) { mat[i][j] -= val * mat[r][j]; } } lead++; rank++; } return rank; }
     function calculateREF(matrix) { let mat = matrix.map(row => [...row]); const rows = mat.length; if (rows === 0) return []; const cols = mat[0].length; if (cols === 0) return [[]]; let lead = 0; for (let r = 0; r < rows; r++) { if (lead >= cols) { return mat; } let i = r; while (mat[i][lead] === 0) { i++; if (i === rows) { i = r; lead++; if (cols === lead) { return mat; } } } [mat[i], mat[r]] = [mat[r], mat[i]]; let val = mat[r][lead]; if (val !== 0) { for (let j = 0; j < cols; j++) { mat[r][j] /= val; } } for (let i = 0; i < rows; i++) { if (i === r) continue; val = mat[i][lead]; for (let j = 0; j < cols; j++) { mat[i][j] -= val * mat[r][j]; } } lead++; } return mat; }
-    function renderMatrix(gridElement, dimensions, matrixName) { gridElement.innerHTML = ''; gridElement.style.gridTemplateColumns = `repeat(${dimensions.cols}, 50px)`; for (let i = 0; i < dimensions.rows * dimensions.cols; i++) { const cell = document.createElement('input'); cell.type = 'text'; cell.className = 'matrix-cell'; gridElement.appendChild(cell); } const dimsSpan = document.getElementById(`matrix-${matrixName.toLowerCase()}-dims`); if (dimsSpan) { dimsSpan.textContent = `(${dimensions.rows} × ${dimensions.cols})`; } }
-    function getMatrixValues(gridElement, dimensions) { const values = []; const cells = gridElement.getElementsByClassName('matrix-cell'); let cellIndex = 0; for (let i = 0; i < dimensions.rows; i++) { const row = []; for (let j = 0; j < dimensions.cols; j++) { row.push(parseFloat(cells[cellIndex].value) || 0); cellIndex++; } values.push(row); } return values; }
-    function createMatrixDisplay(matrixData, cellClass = 'result-cell') { const fragment = document.createDocumentFragment(); const rows = matrixData.length; const cols = matrixData[0] ? matrixData[0].length : 0; const leftParen = document.createElement('div'); leftParen.className = 'matrix-parenthesis'; leftParen.textContent = '('; const grid = document.createElement('div'); grid.className = 'result-grid'; grid.style.gridTemplateColumns = `repeat(${cols}, auto)`; matrixData.forEach(rowData => { rowData.forEach(cellData => { const cell = document.createElement('div'); cell.className = `result-cell ${cellClass}`; cell.textContent = cellData; grid.appendChild(cell); }); }); const rightParen = document.createElement('div'); rightParen.className = 'matrix-parenthesis'; rightParen.textContent = ')'; fragment.append(leftParen, grid, rightParen); return fragment; }
+    function renderMatrix(gridElement, dimensions, matrixName) { gridElement.innerHTML = ''; gridElement.style.gridTemplateColumns = `repeat(${dimensions.cols}, 1fr)`; for (let i = 0; i < dimensions.rows * dimensions.cols; i++) { const cell = document.createElement('input'); cell.type = 'text'; cell.className = 'matrix-cell'; gridElement.appendChild(cell); } const dimsSpan = document.getElementById(`matrix-${matrixName.toLowerCase()}-dims`); if (dimsSpan) { dimsSpan.textContent = `(${dimensions.rows} × ${dimensions.cols})`; } }
+    function getMatrixValues(gridElement, dimensions) { const values = []; const cells = gridElement.getElementsByClassName('matrix-cell'); let cellIndex = 0; let isEmpty = false; for (let i = 0; i < dimensions.rows; i++) { const row = []; for (let j = 0; j < dimensions.cols; j++) { const cell = cells[cellIndex]; if (cell.value.trim() === '') { isEmpty = true; cell.style.borderColor = '#e74c3c'; } else { cell.style.borderColor = ''; } row.push(parseFloat(cell.value) || 0); cellIndex++; } values.push(row); } if (isEmpty) { return { error: "Beberapa sel input kosong. Nilai default (0) digunakan." }; } return { values }; }
+    function populateMatrix(gridElement, values) { const cells = gridElement.getElementsByClassName('matrix-cell'); let flatValues = values.flat(); for (let i = 0; i < cells.length; i++) { if (flatValues[i] !== undefined) { cells[i].value = flatValues[i]; } else { cells[i].value = ''; } } }
     function createOperatorEl(operator) { const el = document.createElement('div'); el.className = 'result-operator'; el.textContent = operator; return el; }
     function createEqualsEl() { const el = document.createElement('div'); el.className = 'result-equals'; el.textContent = '='; return el; }
     function displayError(message) { resultArea.innerHTML = `<div class="result-error">${message}</div>`; resultArea.scrollIntoView({ behavior: 'smooth' }); }
-    function displayStepByStepResult({ matrixA, matrixB, resultData, opName, operator }) { resultArea.innerHTML = '';  const resultBlock = document.createElement('div'); resultBlock.className = 'result-block'; const title = document.createElement('h3'); title.className = 'result-title'; title.textContent = `▼ Detail (${opName})`; const finalMatrixRounded = resultData.map(row => row.map(val => Number(val.toFixed(4)))); const step1 = document.createElement('div'); step1.className = 'result-step'; step1.append(createMatrixDisplay(matrixA), createOperatorEl(operator), createMatrixDisplay(matrixB), createEqualsEl(), createMatrixDisplay(finalMatrixRounded)); resultBlock.append(title, step1); const explanation = document.createElement('p'); explanation.className = 'result-explanation'; resultBlock.appendChild(explanation); const step2 = document.createElement('div'); step2.className = 'result-step'; if (operator === '+' || operator === '-') { const opText = operator === '+' ? 'menjumlahkan' : 'mengurangkan'; explanation.textContent = `Elemen matriks hasil didapat dengan ${opText} elemen-elemen yang berkorespondensi dari matriks A dan B.`; const detailMatrixData = []; for (let i = 0; i < matrixA.length; i++) { const row = []; for (let j = 0; j < matrixA[0].length; j++) { row.push(`${matrixA[i][j]} ${operator} ${matrixB[i][j]}`); } detailMatrixData.push(row); } step2.append(createMatrixDisplay(detailMatrixData, 'detail-cell'), createEqualsEl(), createMatrixDisplay(finalMatrixRounded)); resultBlock.appendChild(step2); } else if (operator === '×') { explanation.innerHTML = `Elemen pada baris <strong>i</strong> dan kolom <strong>j</strong> dari matriks hasil (C) adalah <strong>dot product</strong> dari <strong>baris ke-i Matriks A</strong> dan <strong>kolom ke-j Matriks B</strong>.`; const detailMatrixData = []; for (let i = 0; i < resultData.length; i++) { const row = []; for (let j = 0; j < resultData[0].length; j++) { let terms = []; for (let k = 0; k < matrixA[0].length; k++) { terms.push(`(${matrixA[i][k]}×${matrixB[k][j]})`); } row.push(terms.join(' + ')); } detailMatrixData.push(row); } step2.append(createMatrixDisplay(detailMatrixData, 'detail-cell'), createEqualsEl(), createMatrixDisplay(finalMatrixRounded)); resultBlock.appendChild(step2); } resultArea.appendChild(resultBlock); resultArea.scrollIntoView({ behavior: 'smooth' }); }
-    
-    function displaySingleMatrixResult({ matrix, result, opName, matrixName, parameter = null }) {
-        resultArea.innerHTML = '';
-        const resultBlock = document.createElement('div');
-        resultBlock.className = 'result-block';
-        const title = document.createElement('h3');
-        title.className = 'result-title';
-        title.textContent = `▼ Detail (${opName} of Matrix ${matrixName})`;
-        resultBlock.appendChild(title);
-        const explanation = document.createElement('p');
-        explanation.className = 'result-explanation';
-        const step1 = document.createElement('div');
-        step1.className = 'result-step';
-        const opTextEl = document.createElement('span');
-        opTextEl.className = 'result-op-text';
-
-        if (opName === 'Transpose') {
-            opTextEl.textContent = 'transpose';
-            step1.append(opTextEl, createMatrixDisplay(matrix), createEqualsEl(), createMatrixDisplay(result));
-            explanation.innerHTML = `Transpose matriks didapat dengan mengubah setiap <strong>baris ke-i</strong> menjadi <strong>kolom ke-i</strong>.`;
-            const step2 = document.createElement('div');
-            step2.className = 'result-explanation';
-            let detailText = '';
-            for(let i=0; i<matrix.length; i++) {
-                detailText += `<li>Baris ke-${i+1} dari Matriks ${matrixName} [${matrix[i].join(', ')}] menjadi kolom ke-${i+1} dari hasil.</li>`;
-            }
-            step2.innerHTML = `<ul>${detailText}</ul>`;
-            resultBlock.append(step1, explanation, step2);
-        } else if (opName === 'Determinant') {
-            opTextEl.textContent = 'det';
-            const resultEl = document.createElement('strong'); // DIPERBAIKI
-            resultEl.className = 'result-equals'; // DIPERBAIKI
-            resultEl.textContent = result; // DIPERBAIKI
-            step1.append(opTextEl, createMatrixDisplay(matrix), createEqualsEl(), resultEl); // DIPERBAIKI
-            let detailStep = document.createElement('div');
-            detailStep.className = 'result-explanation';
-            if (matrix.length === 2) {
-                explanation.innerHTML = `Untuk matriks 2x2, determinan dihitung dengan rumus <strong>ad - bc</strong>.`;
-                let calc = `(${matrix[0][0]} × ${matrix[1][1]}) - (${matrix[0][1]} × ${matrix[1][0]}) = ${result}`;
-                detailStep.innerHTML = `<p><strong>Perhitungan:</strong> ${calc}</p>`;
-            } else {
-                explanation.innerHTML = `Untuk matriks ${matrix.length}x${matrix.length}, determinan dihitung menggunakan metode dekomposisi LU.`;
-            }
-            resultBlock.append(step1, explanation, detailStep);
-        } else if (opName === 'Inverse') {
-            opTextEl.textContent = 'inverse';
-            step1.append(opTextEl, createMatrixDisplay(matrix), createEqualsEl(), createMatrixDisplay(result));
-            explanation.innerHTML = `Invers dari matriks A (ditulis A⁻¹) dihitung dengan rumus: <strong>A⁻¹ = (1/det(A)) × adj(A)</strong>.`;
-            const det = math.det(matrix);
-            const adj = math.multiply(math.inv(matrix), det);
-            let step2_det = document.createElement('p');
-            step2_det.className = 'result-explanation';
-            step2_det.innerHTML = `<strong>Langkah 1: Hitung Determinan.</strong> det(${matrixName}) = ${Number(det.toFixed(4))}`;
-            let step3_adj = document.createElement('div');
-            step3_adj.className = 'result-step';
-            step3_adj.innerHTML = `<p class="result-explanation" style="margin-right: 10px;"><strong>Langkah 2: Temukan Matriks Adjoin.</strong> adj(${matrixName}) = </p>`;
-            step3_adj.appendChild(createMatrixDisplay(adj.map(row => row.map(val => Number(val.toFixed(4))))));
-            let step4_final = document.createElement('p');
-            step4_final.className = 'result-explanation';
-            step4_final.innerHTML = `<strong>Langkah 3: Gabungkan.</strong> Hasil akhir adalah (1/${Number(det.toFixed(4))}) dikalikan dengan Matriks Adjoin di atas.`;
-            resultBlock.append(step1, explanation, step2_det, step3_adj, step4_final);
-        } else if (opName === 'Scalar Multiplication') {
-            const scalarEl = document.createElement('strong');
-            scalarEl.className = 'result-equals';
-            scalarEl.textContent = parameter;
-            step1.append(scalarEl, createOperatorEl('×'), createMatrixDisplay(matrix), createEqualsEl(), createMatrixDisplay(result));
-            explanation.innerHTML = `Perkalian skalar dilakukan dengan mengalikan <strong>setiap elemen</strong> matriks dengan nilai skalar (${parameter}).`;
-            const detailMatrixData = [];
-            for (let i = 0; i < matrix.length; i++) {
-                const row = [];
-                for (let j = 0; j < matrix[0].length; j++) {
-                    row.push(`${parameter} × ${matrix[i][j]}`);
-                }
-                detailMatrixData.push(row);
-            }
-            const step2 = document.createElement('div');
-            step2.className = 'result-step';
-            step2.append(createMatrixDisplay(detailMatrixData, 'detail-cell'), createEqualsEl(), createMatrixDisplay(result));
-            resultBlock.append(step1, explanation, step2);
-        } else if (opName === 'Power') {
-            const powerEl = document.createElement('sup');
-            powerEl.className = 'result-equals';
-            powerEl.style.fontSize = '24px';
-            powerEl.textContent = parameter;
-            step1.append(createMatrixDisplay(matrix), powerEl, createEqualsEl(), createMatrixDisplay(result));
-            if (parameter === 0) {
-                explanation.innerHTML = `Setiap matriks persegi yang dipangkatkan <strong>0</strong> akan menghasilkan <strong>matriks identitas</strong>.`;
-            } else if (parameter > 0) {
-                explanation.innerHTML = `Matriks dipangkatkan ${parameter} berarti matriks tersebut dikalikan dengan dirinya sendiri sebanyak <strong>${parameter} kali</strong>.`;
-            } else {
-                explanation.innerHTML = `Matriks dipangkatkan ${parameter} berarti mencari <strong>invers</strong> dari matriks tersebut, lalu dipangkatkan dengan <strong>${Math.abs(parameter)}</strong>.`;
-            }
-            const step2 = document.createElement('div');
-            step2.className = 'result-explanation';
-            if (parameter > 1) {
-                let detailText = `<strong>Perhitungan:</strong> ${matrixName}`;
-                for(let i=1; i<parameter; i++) {
-                    detailText += ` × ${matrixName}`;
-                }
-                step2.innerHTML = detailText;
-            }
-            resultBlock.append(step1, explanation, step2);
-        } else if (opName === 'Rank') {
-            opTextEl.textContent = 'rank';
-            const resultEl = document.createElement('strong'); // DIPERBAIKI
-            resultEl.className = 'result-equals'; // DIPERBAIKI
-            resultEl.textContent = result; // DIPERBAIKI
-            step1.append(opTextEl, createMatrixDisplay(matrix), createEqualsEl(), resultEl); // DIPERBAIKI
-            explanation.innerHTML = `Rank dari sebuah matriks adalah <strong>jumlah maksimum dari baris (atau kolom) yang independen secara linear</strong>. Ini merepresentasikan "dimensi" dari ruang yang dibentuk oleh vektor-vektor matriks.`;
-            const step2 = document.createElement('div');
-            step2.className = 'result-explanation';
-            step2.innerHTML = `<p><strong>Metode Umum:</strong></p><ul>` +
-                `<li>Salah satu cara paling umum untuk menemukan rank adalah dengan mengubah matriks ke <strong>Bentuk Eselon Baris (Row Echelon Form)</strong>.</li>` +
-                `<li>Setelah matriks berada dalam bentuk eselon baris, <strong>jumlah baris yang tidak seluruhnya berisi nol</strong> adalah rank dari matriks tersebut.</li>` +
-                `<li>Untuk matriks ini, hasilnya adalah <strong>${result}</strong>.</li></ul>`;
-            resultBlock.append(step1, explanation, step2);
-        } else if (opName === 'Row Echelon Form') {
-            opTextEl.textContent = 'ref';
-            step1.append(opTextEl, createMatrixDisplay(matrix), createEqualsEl(), createMatrixDisplay(result.map(row => row.map(val => Number(val.toFixed(4))))));
-            explanation.innerHTML = `<strong>Bentuk Eselon Baris (Row Echelon Form)</strong> adalah versi matriks yang disederhanakan. Setiap elemen pivot (angka non-nol pertama dari kiri) pada sebuah baris berada di sebelah kanan pivot dari baris di atasnya.`;
-            const step2 = document.createElement('div');
-            step2.className = 'result-explanation';
-            step2.innerHTML = `<p><strong>Proses:</strong></p><ul>` +
-                `<li>Bentuk ini didapat melalui serangkaian <strong>Operasi Baris Elementer</strong> (menukar baris, mengalikan baris, menjumlahkan/mengurangkan kelipatan baris).</li>` +
-                `<li>Tujuannya adalah untuk menciptakan angka nol di bawah setiap elemen pivot.</li></ul>`;
-            resultBlock.append(step1, explanation, step2);
-        } else if (opName === 'Diagonal Matrix') {
-            opTextEl.textContent = 'diag';
-            step1.append(opTextEl, createMatrixDisplay(matrix), createEqualsEl(), createMatrixDisplay(result));
-            explanation.innerHTML = `Matriks diagonal adalah matriks persegi dimana semua elemen di luar <strong>diagonal utama</strong> (dari kiri atas ke kanan bawah) bernilai nol.`;
-            const step2 = document.createElement('div');
-            step2.className = 'result-explanation';
-            const diagonalValues = math.diag(matrix);
-            step2.innerHTML = `<p><strong>Proses:</strong></p><ul>` +
-                `<li><strong>Langkah 1:</strong> Ambil semua elemen dari diagonal utama matriks asli. Dalam kasus ini: <strong>[${diagonalValues.join(', ')}]</strong>.</li>` +
-                `<li><strong>Langkah 2:</strong> Buat sebuah matriks persegi baru menggunakan elemen-elemen tersebut sebagai diagonal utamanya, dan isi sisa elemen dengan nol.</li></ul>`;
-            resultBlock.append(step1, explanation, step2);
-        }
-        
-        resultArea.appendChild(resultBlock);
-        resultArea.scrollIntoView({ behavior: 'smooth' });
-    }
-    
-    function displayDecompositionResult({ matrix, result, opName, matrixName }) {
-        resultArea.innerHTML = ''; const resultBlock = document.createElement('div'); resultBlock.className = 'result-block'; const title = document.createElement('h3'); title.className = 'result-title'; title.textContent = `▼ Detail (${opName} of Matrix ${matrixName})`; resultBlock.appendChild(title); if (opName === 'LU Decomposition') { const explanation = document.createElement('p'); explanation.className = 'result-explanation'; explanation.innerHTML = `Dekomposisi LU memfaktorkan matriks persegi A menjadi matriks segitiga bawah (L), segitiga atas (U), dan permutasi (P), sehingga <strong>P × A = L × U</strong>.`; resultBlock.appendChild(explanation); const matrices = { L: result.l, U: result.u, P: result.p }; for (const name in matrices) { const step = document.createElement('div'); step.className = 'result-step'; const label = document.createElement('p'); label.className = 'result-explanation'; label.innerHTML = `<strong>Matriks ${name}:</strong>`; step.append(label, createMatrixDisplay(matrices[name].map(row => row.map(val => Number(val.toFixed(4)))))); resultBlock.appendChild(step); } } else if (opName === 'Cholesky Decomposition') { const explanation = document.createElement('p'); explanation.className = 'result-explanation'; explanation.innerHTML = `Dekomposisi Cholesky memfaktorkan matriks A menjadi matriks segitiga bawah (L) dan transposenya (Lᵀ), sehingga <strong>A = L × Lᵀ</strong>. Ini hanya bisa dilakukan jika matriksnya simetris dan positif-definit.`; resultBlock.appendChild(explanation); const stepL = document.createElement('div'); stepL.className = 'result-step'; const labelL = document.createElement('p'); labelL.className = 'result-explanation'; labelL.innerHTML = `<strong>Matriks L:</strong>`; stepL.append(labelL, createMatrixDisplay(result.map(row => row.map(val => Number(val.toFixed(4)))))); resultBlock.appendChild(stepL); const stepLT = document.createElement('div'); stepLT.className = 'result-step'; const labelLT = document.createElement('p'); labelLT.className = 'result-explanation'; labelLT.innerHTML = `<strong>Matriks Lᵀ:</strong>`; stepLT.append(labelLT, createMatrixDisplay(math.transpose(result).map(row => row.map(val => Number(val.toFixed(4)))))); resultBlock.appendChild(stepLT); } resultArea.appendChild(resultBlock); resultArea.scrollIntoView({ behavior: 'smooth' });
-    }
-
+    function displayStepByStepResult({ matrixA, matrixB, resultData, opName, operator }) { resultArea.innerHTML = ''; const resultBlock = document.createElement('div'); resultBlock.className = 'result-block'; const title = document.createElement('h3'); title.className = 'result-title'; title.textContent = `▼ Detail (${opName})`; const finalMatrixRounded = resultData.map(row => row.map(val => Number(val.toFixed(4)))); const step1 = document.createElement('div'); step1.className = 'result-step'; step1.append(createMatrixDisplay(matrixA), createOperatorEl(operator), createMatrixDisplay(matrixB), createEqualsEl(), createMatrixDisplay(finalMatrixRounded)); resultBlock.append(title, step1); const explanation = document.createElement('p'); explanation.className = 'result-explanation'; resultBlock.appendChild(explanation); const step2 = document.createElement('div'); step2.className = 'result-step'; if (operator === '+' || operator === '-') { const opText = operator === '+' ? 'menjumlahkan' : 'mengurangkan'; explanation.textContent = `Elemen matriks hasil didapat dengan ${opText} elemen-elemen yang berkorespondensi dari matriks A dan B.`; const detailMatrixData = []; for (let i = 0; i < matrixA.length; i++) { const row = []; for (let j = 0; j < matrixA[0].length; j++) { row.push(`${matrixA[i][j]} ${operator} ${matrixB[i][j]}`); } detailMatrixData.push(row); } step2.append(createMatrixDisplay(detailMatrixData, 'detail-cell'), createEqualsEl(), createMatrixDisplay(finalMatrixRounded)); resultBlock.appendChild(step2); } else if (operator === '×') { explanation.innerHTML = `Elemen pada baris <strong>i</strong> dan kolom <strong>j</strong> dari matriks hasil (C) adalah <strong>dot product</strong> dari <strong>baris ke-i Matriks A</strong> dan <strong>kolom ke-j Matriks B</strong>.`; const detailMatrixData = []; for (let i = 0; i < resultData.length; i++) { const row = []; for (let j = 0; j < resultData[0].length; j++) { let terms = []; for (let k = 0; k < matrixA[0].length; k++) { terms.push(`(${matrixA[i][k]}×${matrixB[k][j]})`); } row.push(terms.join(' + ')); } detailMatrixData.push(row); } step2.append(createMatrixDisplay(detailMatrixData, 'detail-cell'), createEqualsEl(), createMatrixDisplay(finalMatrixRounded)); resultBlock.appendChild(step2); } resultArea.appendChild(resultBlock); resultArea.scrollIntoView({ behavior: 'smooth' }); }
+    function displaySingleMatrixResult({ matrix, result, opName, matrixName, parameter = null }) { resultArea.innerHTML = ''; const resultBlock = document.createElement('div'); resultBlock.className = 'result-block'; const title = document.createElement('h3'); title.className = 'result-title'; title.textContent = `▼ Detail (${opName} of Matrix ${matrixName})`; resultBlock.appendChild(title); const explanation = document.createElement('p'); explanation.className = 'result-explanation'; const step1 = document.createElement('div'); step1.className = 'result-step'; const opTextEl = document.createElement('span'); opTextEl.className = 'result-op-text'; if (opName === 'Transpose') { opTextEl.textContent = 'transpose'; step1.append(opTextEl, createMatrixDisplay(matrix), createEqualsEl(), createMatrixDisplay(result)); explanation.innerHTML = `Transpose matriks didapat dengan mengubah setiap <strong>baris ke-i</strong> menjadi <strong>kolom ke-i</strong>.`; const step2 = document.createElement('div'); step2.className = 'result-explanation'; let detailText = ''; for(let i=0; i<matrix.length; i++) { detailText += `<li>Baris ke-${i+1} dari Matriks ${matrixName} [${matrix[i].join(', ')}] menjadi kolom ke-${i+1} dari hasil.</li>`; } step2.innerHTML = `<ul>${detailText}</ul>`; resultBlock.append(step1, explanation, step2); } else if (opName === 'Determinant') { opTextEl.textContent = 'det'; const resultEl = document.createElement('strong'); resultEl.className = 'result-equals'; resultEl.textContent = result; step1.append(opTextEl, createMatrixDisplay(matrix), createEqualsEl(), resultEl); let detailStep = document.createElement('div'); detailStep.className = 'result-explanation'; if (matrix.length === 2) { explanation.innerHTML = `Untuk matriks 2x2, determinan dihitung dengan rumus <strong>ad - bc</strong>.`; let calc = `(${matrix[0][0]} × ${matrix[1][1]}) - (${matrix[0][1]} × ${matrix[1][0]}) = ${result}`; detailStep.innerHTML = `<p><strong>Perhitungan:</strong> ${calc}</p>`; } else { explanation.innerHTML = `Untuk matriks ${matrix.length}x${matrix.length}, determinan dihitung menggunakan metode dekomposisi LU.`; } resultBlock.append(step1, explanation, detailStep); } else if (opName === 'Inverse') { opTextEl.textContent = 'inverse'; step1.append(opTextEl, createMatrixDisplay(matrix), createEqualsEl(), createMatrixDisplay(result)); explanation.innerHTML = `Invers dari matriks A (ditulis A⁻¹) dihitung dengan rumus: <strong>A⁻¹ = (1/det(A)) × adj(A)</strong>.`; const det = math.det(matrix); const adj = math.multiply(math.inv(matrix), det); let step2_det = document.createElement('p'); step2_det.className = 'result-explanation'; step2_det.innerHTML = `<strong>Langkah 1: Hitung Determinan.</strong> det(${matrixName}) = ${Number(det.toFixed(4))}`; let step3_adj = document.createElement('div'); step3_adj.className = 'result-step'; step3_adj.innerHTML = `<p class="result-explanation" style="margin-right: 10px;"><strong>Langkah 2: Temukan Matriks Adjoin.</strong> adj(${matrixName}) = </p>`; step3_adj.appendChild(createMatrixDisplay(adj.map(row => row.map(val => Number(val.toFixed(4)))))); let step4_final = document.createElement('p'); step4_final.className = 'result-explanation'; step4_final.innerHTML = `<strong>Langkah 3: Gabungkan.</strong> Hasil akhir adalah (1/${Number(det.toFixed(4))}) dikalikan dengan Matriks Adjoin di atas.`; resultBlock.append(step1, explanation, step2_det, step3_adj, step4_final); } else if (opName === 'Scalar Multiplication') { const scalarEl = document.createElement('strong'); scalarEl.className = 'result-equals'; scalarEl.textContent = parameter; step1.append(scalarEl, createOperatorEl('×'), createMatrixDisplay(matrix), createEqualsEl(), createMatrixDisplay(result)); explanation.innerHTML = `Perkalian skalar dilakukan dengan mengalikan <strong>setiap elemen</strong> matriks dengan nilai skalar (${parameter}).`; const detailMatrixData = []; for (let i = 0; i < matrix.length; i++) { const row = []; for (let j = 0; j < matrix[0].length; j++) { row.push(`${parameter} × ${matrix[i][j]}`); } detailMatrixData.push(row); } const step2 = document.createElement('div'); step2.className = 'result-step'; step2.append(createMatrixDisplay(detailMatrixData, 'detail-cell'), createEqualsEl(), createMatrixDisplay(result)); resultBlock.append(step1, explanation, step2); } else if (opName === 'Power') { const powerEl = document.createElement('sup'); powerEl.className = 'result-equals'; powerEl.style.fontSize = '24px'; powerEl.textContent = parameter; step1.append(createMatrixDisplay(matrix), powerEl, createEqualsEl(), createMatrixDisplay(result)); if (parameter === 0) { explanation.innerHTML = `Setiap matriks persegi yang dipangkatkan <strong>0</strong> akan menghasilkan <strong>matriks identitas</strong>.`; } else if (parameter > 0) { explanation.innerHTML = `Matriks dipangkatkan ${parameter} berarti matriks tersebut dikalikan dengan dirinya sendiri sebanyak <strong>${parameter} kali</strong>.`; } else { explanation.innerHTML = `Matriks dipangkatkan ${parameter} berarti mencari <strong>invers</strong> dari matriks tersebut, lalu dipangkatkan dengan <strong>${Math.abs(parameter)}</strong>.`; } const step2 = document.createElement('div'); step2.className = 'result-explanation'; if (parameter > 1) { let detailText = `<strong>Perhitungan:</strong> ${matrixName}`; for(let i=1; i<parameter; i++) { detailText += ` × ${matrixName}`; } step2.innerHTML = detailText; } resultBlock.append(step1, explanation, step2); } else if (opName === 'Rank') { opTextEl.textContent = 'rank'; const resultEl = document.createElement('strong'); resultEl.className = 'result-equals'; resultEl.textContent = result; step1.append(opTextEl, createMatrixDisplay(matrix), createEqualsEl(), resultEl); explanation.innerHTML = `Rank dari sebuah matriks adalah <strong>jumlah maksimum dari baris (atau kolom) yang independen secara linear</strong>.`; const step2 = document.createElement('div'); step2.className = 'result-explanation'; step2.innerHTML = `<p><strong>Metode Umum:</strong></p><ul>` + `<li>Cara umum untuk menemukan rank adalah dengan mengubah matriks ke <strong>Bentuk Eselon Baris</strong>.</li>` + `<li>Setelah itu, <strong>jumlah baris yang tidak seluruhnya berisi nol</strong> adalah rank dari matriks.</li>` + `<li>Untuk matriks ini, hasilnya adalah <strong>${result}</strong>.</li></ul>`; resultBlock.append(step1, explanation, step2); } else if (opName === 'Row Echelon Form') { opTextEl.textContent = 'ref'; step1.append(opTextEl, createMatrixDisplay(matrix), createEqualsEl(), createMatrixDisplay(result.map(row => row.map(val => Number(val.toFixed(4)))))); explanation.innerHTML = `<strong>Bentuk Eselon Baris (Row Echelon Form)</strong> adalah versi matriks yang disederhanakan.`; const step2 = document.createElement('div'); step2.className = 'result-explanation'; step2.innerHTML = `<p><strong>Proses:</strong></p><ul>` + `<li>Bentuk ini didapat melalui <strong>Operasi Baris Elementer</strong> (menukar baris, mengalikan baris, dll).</li>` + `<li>Tujuannya adalah untuk menciptakan angka nol di bawah setiap elemen pivot.</li></ul>`; resultBlock.append(step1, explanation, step2); } else if (opName === 'Diagonal Matrix') { opTextEl.textContent = 'diag'; step1.append(opTextEl, createMatrixDisplay(matrix), createEqualsEl(), createMatrixDisplay(result)); explanation.innerHTML = `Matriks diagonal adalah matriks persegi dimana semua elemen di luar <strong>diagonal utama</strong> bernilai nol.`; const step2 = document.createElement('div'); step2.className = 'result-explanation'; const diagonalValues = math.diag(matrix); step2.innerHTML = `<p><strong>Proses:</strong></p><ul>` + `<li><strong>Langkah 1:</strong> Ambil semua elemen dari diagonal utama: <strong>[${diagonalValues.join(', ')}]</strong>.</li>` + `<li><strong>Langkah 2:</strong> Buat matriks baru menggunakan elemen tersebut sebagai diagonal utama.</li></ul>`; resultBlock.append(step1, explanation, step2); } const wikiLinks = { 'Transpose': 'https://id.wikipedia.org/wiki/Transpos_matriks', 'Determinant': 'https://id.wikipedia.org/wiki/Determinan', 'Inverse': 'https://id.wikipedia.org/wiki/Matriks_invers', 'Scalar Multiplication': 'https://en.wikipedia.org/wiki/Scalar_multiplication', 'Power': 'https://en.wikipedia.org/wiki/Matrix_exponentiation', 'Rank': 'https://id.wikipedia.org/wiki/Peringkat_(aljabar_linear)', 'Row Echelon Form': 'https://id.wikipedia.org/wiki/Bentuk_eselon_baris', 'Diagonal Matrix': 'https://id.wikipedia.org/wiki/Matriks_diagonal' }; const link = wikiLinks[opName]; if(link) { const eduLink = document.createElement('a'); eduLink.href = link; eduLink.target = '_blank'; eduLink.className = 'edu-link'; eduLink.innerHTML = `Pelajari lebih lanjut tentang ${opName} ↗`; resultBlock.appendChild(eduLink); } resultArea.appendChild(resultBlock); resultArea.scrollIntoView({ behavior: 'smooth' }); }
+    function displayDecompositionResult({ matrix, result, opName, matrixName }) { resultArea.innerHTML = ''; const resultBlock = document.createElement('div'); resultBlock.className = 'result-block'; const title = document.createElement('h3'); title.className = 'result-title'; title.textContent = `▼ Detail (${opName} of Matrix ${matrixName})`; resultBlock.appendChild(title); if (opName === 'LU Decomposition') { const explanation = document.createElement('p'); explanation.className = 'result-explanation'; explanation.innerHTML = `Dekomposisi LU memfaktorkan matriks persegi A menjadi matriks segitiga bawah (L), segitiga atas (U), dan permutasi (P), sehingga <strong>P × A = L × U</strong>.`; resultBlock.appendChild(explanation); const matrices = { L: result.l, U: result.u, P: result.p }; for (const name in matrices) { const step = document.createElement('div'); step.className = 'result-step'; const label = document.createElement('p'); label.className = 'result-explanation'; label.innerHTML = `<strong>Matriks ${name}:</strong>`; step.append(label, createMatrixDisplay(matrices[name].map(row => row.map(val => Number(val.toFixed(4)))))); resultBlock.appendChild(step); } } else if (opName === 'Cholesky Decomposition') { const explanation = document.createElement('p'); explanation.className = 'result-explanation'; explanation.innerHTML = `Dekomposisi Cholesky memfaktorkan matriks A menjadi matriks segitiga bawah (L) dan transposenya (Lᵀ), sehingga <strong>A = L × Lᵀ</strong>. Ini hanya bisa dilakukan jika matriksnya simetris dan positif-definit.`; resultBlock.appendChild(explanation); const stepL = document.createElement('div'); stepL.className = 'result-step'; const labelL = document.createElement('p'); labelL.className = 'result-explanation'; labelL.innerHTML = `<strong>Matriks L:</strong>`; stepL.append(labelL, createMatrixDisplay(result.map(row => row.map(val => Number(val.toFixed(4)))))); resultBlock.appendChild(stepL); const stepLT = document.createElement('div'); stepLT.className = 'result-step'; const labelLT = document.createElement('p'); labelLT.className = 'result-explanation'; labelLT.innerHTML = `<strong>Matriks Lᵀ:</strong>`; stepLT.append(labelLT, createMatrixDisplay(math.transpose(result).map(row => row.map(val => Number(val.toFixed(4)))))); resultBlock.appendChild(stepLT); } const wikiLinks = { 'LU Decomposition': 'https://id.wikipedia.org/wiki/Dekomposisi_LU', 'Cholesky Decomposition': 'https://en.wikipedia.org/wiki/Cholesky_decomposition' }; const link = wikiLinks[opName]; if(link) { const eduLink = document.createElement('a'); eduLink.href = link; eduLink.target = '_blank'; eduLink.className = 'edu-link'; eduLink.innerHTML = `Pelajari lebih lanjut tentang ${opName} ↗`; resultBlock.appendChild(eduLink); } resultArea.appendChild(resultBlock); resultArea.scrollIntoView({ behavior: 'smooth' }); }
     function handleSingleMatrixOp(matrixName, dims, grid, operation) {
-        const matrix = getMatrixValues(grid, dims);
+        const data = getMatrixValues(grid, dims);
+        if (data.error) {
+            displayError(data.error);
+            return;
+        }
+        const matrix = data.values;
         try {
             if (operation === 'Transpose') { const result = math.transpose(matrix); displaySingleMatrixResult({ matrix, result, opName: 'Transpose', matrixName }); } 
             else if (operation === 'Determinant') { if (dims.rows !== dims.cols) { displayError(`Error: Determinan hanya bisa dihitung untuk matriks persegi.`); return; } const result = math.det(matrix); displaySingleMatrixResult({ matrix, result, opName: 'Determinant', matrixName }); } 
@@ -210,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
             else if (operation === 'Row Echelon Form') { const result = calculateREF(matrix); displaySingleMatrixResult({ matrix, result, opName: 'Row Echelon Form', matrixName }); } 
             else if (operation === 'Diagonal Matrix') { const result = math.diag(math.diag(matrix)); displaySingleMatrixResult({ matrix, result, opName: 'Diagonal Matrix', matrixName }); } 
             else if (operation === 'LU Decomposition') { if (dims.rows !== dims.cols) { displayError('Error: Dekomposisi LU hanya bisa dilakukan pada matriks persegi.'); return; } const result = math.lup(matrix); displayDecompositionResult({ matrix, result, opName: 'LU Decomposition', matrixName }); } 
-            else if (operation === 'Cholesky Decomposition') { if (dims.rows !== dims.cols) { displayError('Error: Dekomposisi Cholesky hanya bisa dilakukan pada matriks persegi.'); return; } if (!math.deepEqual(matrix, math.transpose(matrix))) { displayError('Error: Dekomposisi Cholesky memerlukan matriks yang simetris.'); return; } try { const result = math.cholesky(matrix); displayDecompositionResult({ matrix, result: result, opName: 'Cholesky Decomposition', matrixName }); } catch (e) { displayError('Error: Dekomposisi Cholesky gagal. Matriks mungkin tidak positif-definit.'); } }
+            else if (operation === 'Cholesky Decomposition') { if (dims.rows !== dims.cols) { displayError('Error: Dekomposisi Cholesky hanya bisa dilakukan pada matriks persegi.'); return; } if (!math.deepEqual(matrix, math.transpose(matrix))) { displayError('Error: Dekomposisi Cholesky memerlukan matriks yang simetris.'); return; } try { const result = math.cholesky(matrix); displayDecompositionResult({ matrix, result, opName: 'Cholesky Decomposition', matrixName }); } catch (e) { displayError('Error: Dekomposisi Cholesky gagal. Matriks mungkin tidak positif-definit.'); } }
         } catch (e) {
             displayError(`Terjadi error: ${e.message}`);
         }
@@ -225,9 +118,10 @@ document.addEventListener('DOMContentLoaded', () => {
     randomBtnA.addEventListener('click', () => { const cells = gridA.getElementsByClassName('matrix-cell'); for (const cell of cells) { cell.value = Math.floor(Math.random() * 19) - 9; } });
     randomBtnB.addEventListener('click', () => { const cells = gridB.getElementsByClassName('matrix-cell'); for (const cell of cells) { cell.value = Math.floor(Math.random() * 19) - 9; } });
     cleanBtn.addEventListener('click', () => { const allCells = document.getElementsByClassName('matrix-cell'); for (const cell of allCells) { cell.value = ''; } resultArea.innerHTML = ''; });
-    opAddBtn.addEventListener('click', () => { if (dimsA.rows !== dimsB.rows || dimsA.cols !== dimsB.cols) { displayError('Error: Matriks harus punya dimensi yang sama untuk penjumlahan.'); return; } const matrixA = getMatrixValues(gridA, dimsA); const matrixB = getMatrixValues(gridB, dimsB); const resultData = math.add(matrixA, matrixB); displayStepByStepResult({ matrixA, matrixB, resultData, opName: 'Matrix Addition', operator: '+' }); });
-    opSubtractBtn.addEventListener('click', () => { if (dimsA.rows !== dimsB.rows || dimsA.cols !== dimsB.cols) { displayError('Error: Matriks harus punya dimensi yang sama untuk pengurangan.'); return; } const matrixA = getMatrixValues(gridA, dimsA); const matrixB = getMatrixValues(gridB, dimsB); const resultData = math.subtract(matrixA, matrixB); displayStepByStepResult({ matrixA, matrixB, resultData, opName: 'Matrix Subtraction', operator: '-' }); });
-    opMultiplyBtn.addEventListener('click', () => { if (dimsA.cols !== dimsB.rows) { displayError(`Error: Untuk perkalian A(m×n) × B(p×q), jumlah kolom A (n=${dimsA.cols}) harus sama dengan jumlah baris B (p=${dimsB.rows}).`); return; } const matrixA = getMatrixValues(gridA, dimsA); const matrixB = getMatrixValues(gridB, dimsB); const resultData = math.multiply(matrixA, matrixB); displayStepByStepResult({ matrixA, matrixB, resultData, opName: 'Matrix Multiplication', operator: '×' }); });
+    opAddBtn.addEventListener('click', () => { const dataA = getMatrixValues(gridA, dimsA); const dataB = getMatrixValues(gridB, dimsB); if(dataA.error || dataB.error) { displayError(dataA.error || dataB.error); return; } if (dimsA.rows !== dimsB.rows || dimsA.cols !== dimsB.cols) { displayError('Error: Matriks harus punya dimensi yang sama untuk penjumlahan.'); return; } const resultData = math.add(dataA.values, dataB.values); displayStepByStepResult({ matrixA: dataA.values, matrixB: dataB.values, resultData, opName: 'Matrix Addition', operator: '+' }); });
+    opSubtractBtn.addEventListener('click', () => { const dataA = getMatrixValues(gridA, dimsA); const dataB = getMatrixValues(gridB, dimsB); if(dataA.error || dataB.error) { displayError(dataA.error || dataB.error); return; } if (dimsA.rows !== dimsB.rows || dimsA.cols !== dimsB.cols) { displayError('Error: Matriks harus punya dimensi yang sama untuk pengurangan.'); return; } const resultData = math.subtract(dataA.values, dataB.values); displayStepByStepResult({ matrixA: dataA.values, matrixB: dataB.values, resultData, opName: 'Matrix Subtraction', operator: '-' }); });
+    opMultiplyBtn.addEventListener('click', () => { const dataA = getMatrixValues(gridA, dimsA); const dataB = getMatrixValues(gridB, dimsB); if(dataA.error || dataB.error) { displayError(dataA.error || dataB.error); return; } if (dimsA.cols !== dimsB.rows) { displayError(`Error: Untuk perkalian A(m×n) × B(p×q), jumlah kolom A (n=${dimsA.cols}) harus sama dengan jumlah baris B (p=${dimsB.rows}).`); return; } const resultData = math.multiply(dataA.values, dataB.values); displayStepByStepResult({ matrixA: dataA.values, matrixB: dataB.values, resultData, opName: 'Matrix Multiplication', operator: '×' }); });
+    swapBtn.addEventListener('click', () => { const dataA = getMatrixValues(gridA, dimsA); const dataB = getMatrixValues(gridB, dimsB); const valuesA = dataA.values || []; const valuesB = dataB.values || []; const tempDims = { ...dimsA }; dimsA.rows = dimsB.rows; dimsA.cols = dimsB.cols; dimsB.rows = tempDims.rows; dimsB.cols = tempDims.cols; renderMatrix(gridA, dimsA, 'A'); renderMatrix(gridB, dimsB, 'B'); populateMatrix(gridA, valuesB); populateMatrix(gridB, valuesA); });
     transposeBtnA.addEventListener('click', () => handleSingleMatrixOp('A', dimsA, gridA, 'Transpose'));
     determinantBtnA.addEventListener('click', () => handleSingleMatrixOp('A', dimsA, gridA, 'Determinant'));
     inverseBtnA.addEventListener('click', () => handleSingleMatrixOp('A', dimsA, gridA, 'Inverse'));
@@ -249,8 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
     luBtnB.addEventListener('click', () => handleSingleMatrixOp('B', dimsB, gridB, 'LU Decomposition'));
     choleskyBtnB.addEventListener('click', () => handleSingleMatrixOp('B', dimsB, gridB, 'Cholesky Decomposition'));
     
-    // --- Initial Render ---
     renderMatrix(gridA, dimsA, 'A');
     renderMatrix(gridB, dimsB, 'B');
-
 });

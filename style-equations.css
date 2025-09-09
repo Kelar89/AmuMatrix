@@ -29,16 +29,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 15px; /* Jarak antara kurung dan grid */
 }
 
 .equations-grid {
-    display: grid;
-    gap: 10px 5px; /* Sedikit mengurangi gap horizontal */
-    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Jarak antar baris persamaan */
 }
 
 .equation-row {
-    display: contents;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Jarak antar elemen dalam satu baris */
 }
 
 .equation-cell {
@@ -48,19 +51,20 @@
 }
 
 .equation-cell input {
-    width: 45px; /* Sedikit perkecil input */
-    height: 40px;
+    width: 50px;
+    height: 50px;
     background-color: #34495e;
     border: 1px solid #4a6a8a;
     border-radius: 4px;
     color: #ecf0f1;
     text-align: center;
     font-size: 16px;
+    transition: border-color 0.3s;
 }
 
-.equation-cell label, .equation-cell span {
+.equation-cell label, .equation-row span {
     color: #bdc3c7;
-    padding: 0 5px;
+    font-size: 1.2rem;
 }
 
 .equations-controls {
@@ -104,8 +108,14 @@
 
 .clear-button {
     background-color: #566573;
-    margin-left: 5px; /* Tambahkan margin */
+    margin-left: 5px;
 }
 .clear-button:hover {
     background-color: #7f8c8d;
+}
+
+.cramer-step {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #4a6a8a;
 }
